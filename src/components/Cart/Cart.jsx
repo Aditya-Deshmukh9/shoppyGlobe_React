@@ -5,7 +5,7 @@ import CartItem from "./CartItem";
 import { useMemo } from "react";
 
 function Cart() {
-  const { cartItem, totalItemInCart } = useSelector((state) => state.cart);
+  const { cartItem } = useSelector((state) => state.cart);
 
   const totalAmount = useMemo(() => {
     return cartItem.reduce(
@@ -33,7 +33,7 @@ function Cart() {
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-100 mb-8">
-        Shopping Cart ({totalItemInCart})
+        Shopping Cart ({cartItem?.length ? cartItem.length : "0"})
       </h1>
       <div className="rounded-lg shadow-md overflow-hidden">
         <div className="divide-y divide-gray-900">

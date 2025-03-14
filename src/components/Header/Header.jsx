@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router";
 
 function Header() {
-  const { totalItemInCart, cartItem } = useSelector((state) => state.cart);
+  const { cartItem } = useSelector((state) => state.cart);
 
   return (
     <header className="sticky z-50 top-0 w-full px-4 h-16 bg-gray-800 flex justify-between items-center">
@@ -22,7 +22,7 @@ function Header() {
         className="h-10 p-1 px-2 gap-2 flex items-center border border-gray-300"
       >
         <FaShoppingCart size={25} />
-        <p className="text-2xl">{totalItemInCart ? totalItemInCart : "0"}</p>
+        <p className="text-2xl">{cartItem ? cartItem.length : "0"}</p>
       </Link>
     </header>
   );
