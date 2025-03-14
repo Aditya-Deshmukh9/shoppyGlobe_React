@@ -8,7 +8,7 @@ Here is how the To-Do List Application looks:
 
 💻 Github: [https://github.com/Aditya-Deshmukh9/shoppyGlobe_React](https://github.com/Aditya-Deshmukh9/shoppyGlobe_React)
 
-💻 Deploy: [https://shoppyglobe-aditya.netlify.app/](https://todoappinternshala.netlify.app/)
+💻 Deploy: [https://shoppyglobe-aditya.netlify.app/](https://shoppyglobe-aditya.netlify.app/)
 
 ![To-Do List App Preview](public/image.png)
 
