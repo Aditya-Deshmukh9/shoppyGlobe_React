@@ -1,14 +1,13 @@
 import express from "express";
 import cors from "cors";
 
-import { logDetails } from "./middlewares/logDetails.middleware.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
-
 // app route
 import productRoute from "./routes/product.route.js";
 import cartRoute from "./routes/cart.route.js";
 import authRoute from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
+import { errorHandler } from "./utils/errorHandler.js";
+import { logDetails } from "./middlewares/logDetails.middleware.js";
 
 const app = express();
 

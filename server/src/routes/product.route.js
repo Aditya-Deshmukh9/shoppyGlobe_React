@@ -11,8 +11,8 @@ import authMiddleware from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
 // GET	/products	Fetch all products
-// GET	/products/:id	Fetch a single product by ID
 // POST	/products	Add a new product
+// GET	/products/:id	Fetch a single product by ID
 // PUT	/products/:id	Update product details
 // DELETE	/products/:id	Remove a product
 
