@@ -1,7 +1,32 @@
 import Product from "../models/product.Schema.js";
 import Cart from "../models/cart.Schema.js";
 
-export const addProductToCart = async (req, res) => {
+export const getCartItems = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const cartItems = await Cart.findOne({ owner: userId }).populate(
+      "items.productId"
+    );
+
+    if (!cartItems) {
+      res.status(404).json({
+        success: false,
+        message: "Cart is Empty",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully Cart Item fetch",
+      data: cartItems,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addItemToCart = async (req, res, next) => {
   try {
     const { productId, quantity = 1 } = req.body;
 
@@ -53,15 +78,11 @@ export const addProductToCart = async (req, res) => {
       message: "Successfully added to Cart",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const updateCart = async (req, res) => {
+export const updateCart = async (req, res, next) => {
   try {
     const { productId, quantity } = req.body;
 
@@ -98,20 +119,17 @@ export const updateCart = async (req, res) => {
       message: "Cart updated successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const deleteProductFromCart = async (req, res) => {
+export const deleteCartItem = async (req, res, nexr) => {
   try {
-    const { productId } = req.body;
+    const { ItemId } = req.body;
+    const userId = req.user._id;
 
     // Find the cart associated with the logged-in user
-    let cart = await Cart.findOne({ owner: req.user._id });
+    let cart = await Cart.findOne({ owner: userId });
 
     if (!cart) {
       return res.status(404).json({
@@ -120,22 +138,8 @@ export const deleteProductFromCart = async (req, res) => {
       });
     }
 
-    // Check if the product exists in the cart
-    const existedItemIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId
-    );
+    cart.items = cart.items.filter((item) => item._id.toString() !== ItemId);
 
-    if (existedItemIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found in cart",
-      });
-    }
-
-    // Remove the product from the cart
-    cart.items.splice(existedItemIndex, 1);
-
-    // Save the updated cart to the database
     await cart.save();
 
     res.status(200).json({
@@ -143,10 +147,6 @@ export const deleteProductFromCart = async (req, res) => {
       message: "Product removed from cart successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
+    next(error);
   }
 };

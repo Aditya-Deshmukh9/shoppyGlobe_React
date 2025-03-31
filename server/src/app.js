@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import { logDetails } from "./middlewares/logDetails.middleware.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 // app route
 import productRoute from "./routes/product.route.js";
@@ -18,8 +19,11 @@ app.use(express.urlencoded({ extended: true })); //to ensure valid URLs and data
 app.use(cookieParser());
 app.use(logDetails);
 
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/products", productRoute);
-app.use("/api/v1/cart", cartRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/products", productRoute);
+app.use("/api/cart", cartRoute);
+
+// Global error handler
+app.use(errorHandler);
 
 export { app };

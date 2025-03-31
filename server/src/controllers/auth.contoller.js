@@ -1,6 +1,6 @@
 import User from "../models/user.schema.js";
 
-export const RegisterUser = async (req, res) => {
+export const RegisterUser = async (req, res, next) => {
   try {
     //get user details
     const { name, email, password } = req.body;
@@ -33,16 +33,11 @@ export const RegisterUser = async (req, res) => {
       message: "User registered successfully",
     });
   } catch (error) {
-    console.error("Error during user registration:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
@@ -103,39 +98,38 @@ export const loginUser = async (req, res) => {
         loggedInUser,
       });
   } catch (error) {
-    console.error("Error during user login:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const logoutUser = async (req, res) => {
-  await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $unset: {
-        refreshToken: 1, // this removes the field from document
+export const logoutUser = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $unset: {
+          refreshToken: 1, // this removes the field from document
+        },
       },
-    },
-    {
-      new: true,
-    }
-  );
+      {
+        new: true,
+      }
+    );
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
 
-  return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
-    .json({
-      success: true,
-      message: "User logged Out",
-    });
+    return res
+      .status(200)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json({
+        success: true,
+        message: "User logged Out",
+      });
+  } catch (error) {
+    next(error);
+  }
 };
